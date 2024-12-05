@@ -1,11 +1,14 @@
 "use client";
 
 import { Input } from "@/components/Input";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import logo from "../../public/images/logo.png";
 
 const Auth = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +19,36 @@ const Auth = () => {
       currentVariant === "login" ? "register" : "login"
     );
   }, []);
+
+  const login = useCallback(async () => {
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, password, router]);
+
+  const register = useCallback(async () => {
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify({ email, name, password }),
+      });
+
+      if (res.status === 200) {
+        login();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, name, password, login]);
 
   return (
     <div className="relative size-full bg-[url('/images/hero.jpg')] bg-cover bg-fixed bg-center bg-no-repeat">
@@ -55,13 +88,15 @@ const Auth = () => {
                 label="password"
                 type="password"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  console.log("🚀 ~ Auth ~ event:", event.target.value);
                   setPassword(event.target.value);
                 }}
                 value={password}
               />
             </div>
-            <button className="mt-10 w-full rounded-md bg-red-600 py-3 text-white transition hover:bg-red-700">
+            <button
+              onClick={variant === "login" ? login : register}
+              className="mt-10 w-full rounded-md bg-red-600 py-3 text-white transition hover:bg-red-700"
+            >
               {variant === "login" ? "se connecter" : "créer un compte"}
             </button>
             <p className="mt-12 text-neutral-500">
