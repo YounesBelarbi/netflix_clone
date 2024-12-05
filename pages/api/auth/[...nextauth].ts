@@ -1,3 +1,4 @@
+import { env } from "@/lib/env";
 import prisma from "@/lib/prismadb";
 import bcrypt from "bcrypt";
 import NextAuth from "next-auth";
@@ -13,14 +14,13 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials.email || !credentials.password) {
+        if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
-
         if (!user || !user.password) {
           throw new Error("User not found");
         }
@@ -29,7 +29,6 @@ export const authOptions = {
           credentials.password,
           user.password
         );
-
         if (!isCorrectPassword) {
           throw new Error("Incorrect credentials");
         }
@@ -43,12 +42,12 @@ export const authOptions = {
   },
   debug: process.env.NODE_ENV === "development",
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
   jwt: {
-    secret: process.env.NEXTAUTH_JWT_SECRET,
+    secret: env.NEXTAUTH_JWT_SECRET,
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
