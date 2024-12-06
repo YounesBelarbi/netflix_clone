@@ -6,6 +6,10 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     NEXTAUTH_JWT_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
+    GITHUB_ID: z.string().min(1),
+    GITHUB_SECRET: z.string().min(1),
+    GOOGLE_ID: z.string().min(1),
+    GOOGLE_SECRET: z.string().min(1),
   },
   client: {
     // NEXT_PUBLIC_PUBLISHABLE_KEY: z.string().min(1),

@@ -5,6 +5,8 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import logo from "../../public/images/logo.png";
 
 const Auth = () => {
@@ -22,14 +24,16 @@ const Auth = () => {
 
   const login = useCallback(async () => {
     try {
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         email,
         password,
         redirect: false,
         callbackUrl: "/",
       });
 
-      router.push("/");
+      if (res?.status === 200) {
+        router.push("/");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -78,7 +82,6 @@ const Auth = () => {
                 label="email"
                 type="email"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  console.log("🚀 ~ Auth ~ event:", event.target.value);
                   setEmail(event.target.value);
                 }}
                 value={email}
@@ -99,6 +102,20 @@ const Auth = () => {
             >
               {variant === "login" ? "se connecter" : "créer un compte"}
             </button>
+            <div className="mt-8 flex flex-row items-center justify-center gap-4">
+              <div
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+                className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80"
+              >
+                <FcGoogle size={30} />
+              </div>
+              <div
+                onClick={() => signIn("github", { callbackUrl: "/" })}
+                className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80"
+              >
+                <FaGithub size={30} />
+              </div>
+            </div>
             <p className="mt-12 text-neutral-500">
               {variant === "login"
                 ? "Première fois sur Netflix ?"
