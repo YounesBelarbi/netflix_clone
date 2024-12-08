@@ -31,9 +31,9 @@ const Auth = () => {
         callbackUrl: "/",
       });
 
-      if (res?.status === 200) {
-        router.push("/");
-      }
+      // if (res?.status === 200) {
+      router.push("/");
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -46,9 +46,9 @@ const Auth = () => {
         body: JSON.stringify({ email, name, password }),
       });
 
-      if (res.status === 200) {
-        login();
-      }
+      // if (res.status === 200) {
+      login();
+      // }
     } catch (error) {
       console.log(error);
     }

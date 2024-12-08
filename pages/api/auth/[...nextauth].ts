@@ -7,9 +7,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 
-console.log("🚀 ~ env.GITHUB_ID:", env.GITHUB_ID);
-console.log("🚀 ~ env.GITHUB_SECRET:", env.GITHUB_SECRET);
-
 export const authOptions = {
   providers: [
     GithubProvider({
@@ -57,7 +54,7 @@ export const authOptions = {
   adapter: PrismaAdapter(prisma),
   debug: process.env.NODE_ENV === "development",
   session: {
-    strategy: "jwt" as const,
+    strategy: "jwt",
   },
   jwt: {
     secret: env.NEXTAUTH_JWT_SECRET,

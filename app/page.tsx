@@ -1,3 +1,10 @@
-export default function Home() {
-  return <div className="text-3xl text-green-500">netflix</div>;
+import SignOutButton from "@/components/SignOutButton";
+
+export default async function Home() {
+  return (
+    <>
+      <h1 className="text-3xl text-green-500">netflix</h1>;
+      <SignOutButton />
+    </>
+  );
 }
