@@ -1,11 +1,16 @@
 "use client";
 
 import { Input } from "@/components/Input";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import logo from "../../public/images/logo.png";
 
 const Auth = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +21,38 @@ const Auth = () => {
       currentVariant === "login" ? "register" : "login"
     );
   }, []);
+
+  const login = useCallback(async () => {
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+
+      // if (res?.status === 200) {
+      router.push("/");
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, password, router]);
+
+  const register = useCallback(async () => {
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify({ email, name, password }),
+      });
+
+      // if (res.status === 200) {
+      login();
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, name, password, login]);
 
   return (
     <div className="relative size-full bg-[url('/images/hero.jpg')] bg-cover bg-fixed bg-center bg-no-repeat">
@@ -45,7 +82,6 @@ const Auth = () => {
                 label="email"
                 type="email"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  console.log("🚀 ~ Auth ~ event:", event.target.value);
                   setEmail(event.target.value);
                 }}
                 value={email}
@@ -55,15 +91,31 @@ const Auth = () => {
                 label="password"
                 type="password"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  console.log("🚀 ~ Auth ~ event:", event.target.value);
                   setPassword(event.target.value);
                 }}
                 value={password}
               />
             </div>
-            <button className="mt-10 w-full rounded-md bg-red-600 py-3 text-white transition hover:bg-red-700">
+            <button
+              onClick={variant === "login" ? login : register}
+              className="mt-10 w-full rounded-md bg-red-600 py-3 text-white transition hover:bg-red-700"
+            >
               {variant === "login" ? "se connecter" : "créer un compte"}
             </button>
+            <div className="mt-8 flex flex-row items-center justify-center gap-4">
+              <div
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+                className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80"
+              >
+                <FcGoogle size={30} />
+              </div>
+              <div
+                onClick={() => signIn("github", { callbackUrl: "/" })}
+                className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80"
+              >
+                <FaGithub size={30} />
+              </div>
+            </div>
             <p className="mt-12 text-neutral-500">
               {variant === "login"
                 ? "Première fois sur Netflix ?"
