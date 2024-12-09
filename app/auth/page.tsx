@@ -3,14 +3,12 @@
 import { Input } from "@/components/Input";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import logo from "../../public/images/logo.png";
 
 const Auth = () => {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -24,31 +22,24 @@ const Auth = () => {
 
   const login = useCallback(async () => {
     try {
-      const res = await signIn("credentials", {
+      await signIn("credentials", {
         email,
         password,
-        redirect: false,
-        callbackUrl: "/",
+        callbackUrl: "/profile",
       });
-
-      // if (res?.status === 200) {
-      router.push("/");
-      // }
     } catch (error) {
       console.log(error);
     }
-  }, [email, password, router]);
+  }, [email, password]);
 
   const register = useCallback(async () => {
     try {
-      const res = await fetch("/api/register", {
+      await fetch("/api/register", {
         method: "POST",
         body: JSON.stringify({ email, name, password }),
       });
 
-      // if (res.status === 200) {
       login();
-      // }
     } catch (error) {
       console.log(error);
     }
@@ -104,13 +95,13 @@ const Auth = () => {
             </button>
             <div className="mt-8 flex flex-row items-center justify-center gap-4">
               <div
-                onClick={() => signIn("google", { callbackUrl: "/" })}
+                onClick={() => signIn("google", { callbackUrl: "/profile" })}
                 className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80"
               >
                 <FcGoogle size={30} />
               </div>
               <div
-                onClick={() => signIn("github", { callbackUrl: "/" })}
+                onClick={() => signIn("github", { callbackUrl: "/profile" })}
                 className="flex size-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80"
               >
                 <FaGithub size={30} />
