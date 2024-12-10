@@ -36,6 +36,7 @@ const Profile = () => {
                   group-hover:border-white"
               >
                 <Image
+                  className="rounded-md"
                   src={defaultBlue}
                   alt="profile"
                   width="300"
