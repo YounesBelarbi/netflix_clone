@@ -7,7 +7,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { user } = await serverAuth(req);
+    const { user } = await serverAuth(req, res);
 
     return res.status(200).json(user);
   } catch (error) {

@@ -8,7 +8,7 @@ export const movies = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await servAuth(req);
+    await servAuth(req, res);
     const movies = await prisma.movie.findMany();
 
     return res.status(200).json(movies);
