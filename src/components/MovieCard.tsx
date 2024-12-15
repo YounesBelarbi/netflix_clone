@@ -1,4 +1,6 @@
+import useInfoModal from "@/hooks/useInfoModal";
 import { useRouter } from "next/navigation";
+import { BiChevronDown } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
 import FavoriteButton from "./FavoriteButton";
 
@@ -8,6 +10,7 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
   const router = useRouter();
+  const { openModal } = useInfoModal();
   return (
     <div className="col-span group relative h-[12vw] bg-zinc-900">
       <img
@@ -42,6 +45,15 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
               <BsFillPlayFill className="text-black" size={20} />
             </div>
             <FavoriteButton movieId={data?.id} />
+            <div
+              onClick={() => openModal(data?.id)}
+              className="group/item ml-auto flex size-6 cursor-pointer items-center justify-center rounded-full border-2 border-white transition hover:bg-neutral-300 lg:size-10"
+            >
+              <BiChevronDown
+                className="text-white group-hover/item:text-neutral-300"
+                size={20}
+              />
+            </div>
           </div>
           <p className=" mt-2 font-semibold text-green-400">
             Nouveau <span className="text-white">2025</span>
