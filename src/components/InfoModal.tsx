@@ -36,11 +36,11 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
         <div
           className={`${
             isVisible ? "scale-100" : "scale-0"
-          }relative flex-auto bg-zinc-900 drop-shadow-md duration-300`}
+          } relative flex-auto bg-zinc-900 drop-shadow-md duration-300`}
         >
-          <div className=" relative h-96">
+          <div className="relative h-96">
             <video
-              className="brighness-[60%] size-full object-cover "
+              className="brighness-[60%] size-full object-cover"
               autoPlay
               muted
               loop
