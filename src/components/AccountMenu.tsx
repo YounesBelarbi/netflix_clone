@@ -29,7 +29,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
           onClick={() => signOut()}
           className="px-3 text-center text-sm text-white hover:underline"
         >
-          Sign out
+          Se déconnecter
         </div>
       </div>
     </div>

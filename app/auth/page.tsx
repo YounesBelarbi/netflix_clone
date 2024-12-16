@@ -3,9 +3,11 @@
 import { Input } from "@/components/Input";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 import logo from "../../public/images/logo.png";
 
 const Auth = () => {
@@ -13,6 +15,7 @@ const Auth = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [variant, setVariant] = useState("login");
+  const router = useRouter();
 
   const toggleVariant = useCallback(() => {
     setVariant((currentVariant) =>
@@ -22,22 +25,46 @@ const Auth = () => {
 
   const login = useCallback(async () => {
     try {
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         email,
         password,
         callbackUrl: "/profile",
+        redirect: false,
       });
+
+      if (!res?.ok) {
+        const errorMessage =
+          res?.error === "Incorrect credentials"
+            ? "Email ou mot de passe incorrect"
+            : "Tous les champs sont obligatoires";
+        toast.error(errorMessage, {
+          className: "text-orange-800",
+        });
+        return;
+      }
+
+      router.push("/profile");
     } catch (error) {
       console.log(error);
     }
-  }, [email, password]);
+  }, [email, password, router]);
 
   const register = useCallback(async () => {
     try {
-      await fetch("/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         body: JSON.stringify({ email, name, password }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.log("🚀 ~ errorData:", errorData);
+        console.log("🚀 ~ errorData.message:", errorData.message);
+        toast.error(errorData.message, {
+          className: "text-orange-800",
+        });
+        return;
+      }
 
       login();
     } catch (error) {

@@ -4,13 +4,15 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export const register = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    return res.status(405).json({ message: "Méthode non autorisée" });
   }
 
   try {
     const { email, name, password } = JSON.parse(req.body);
     if (!email || !name || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ message: "Tous les champs sont obligatoires" });
     }
 
     const existingUser = await prisma.user.findUnique({
@@ -20,7 +22,7 @@ export const register = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "L'utilisateur existe déjà" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,7 +39,9 @@ export const register = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json(user);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ message: "Quelque chose n'a pas fonctionné" });
   }
 };
 
