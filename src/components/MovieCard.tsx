@@ -5,7 +5,13 @@ import { BsFillPlayFill } from "react-icons/bs";
 import FavoriteButton from "./FavoriteButton";
 
 interface MovieCardProps {
-  data: Record<string, number | string>;
+  data: {
+    id: string;
+    thumbnailUrl: string;
+    duration: string;
+    genre: string;
+    videoUrl: string;
+  };
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {

@@ -8,10 +8,10 @@ interface InfoModalProps {
 }
 
 const useInfoModal = create<InfoModalProps>((set) => ({
-  movieId: undefined,
+  movieId: "",
   isOpen: false,
   openModal: (movieId: string) => set({ isOpen: true, movieId }),
-  closeModal: () => set({ isOpen: false, movieId: undefined }),
+  closeModal: () => set({ isOpen: false, movieId: "" }),
 }));
 
 export default useInfoModal;
